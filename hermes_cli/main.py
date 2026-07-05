@@ -2410,9 +2410,9 @@ def cmd_chat(args):
 
 
 def cmd_gateway(args):
-    """Gateway management commands."""
+    """Gateway management commands. 指责不单一，Skill的同步不应该放在gateway，这是Agent的能力"""
     _sync_bundled_skills_quietly()
-
+    # 避免其他命令被迫承受加载开销
     from hermes_cli.gateway import gateway_command
 
     gateway_command(args)
@@ -12845,6 +12845,8 @@ def main():
     # gateway + proxy commands  (parsers built in hermes_cli/subcommands/gateway.py)
     # =========================================================================
     build_gateway_parser(
+        # cmd_proxy 无关的内容，是Hermes订阅的openai中转站，与网关无关
+        # cmd_gateway_enroll，是一个可选功能，用于让你的自托管 Gateway 通过 Nous 的云端中继来接收消息，省去配置公网回调和端口暴露的麻烦。
         subparsers, cmd_gateway=cmd_gateway, cmd_proxy=cmd_proxy, cmd_gateway_enroll=cmd_gateway_enroll
     )
 
